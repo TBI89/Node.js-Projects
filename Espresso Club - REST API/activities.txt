@@ -1,0 +1,5 @@
+Date: 8/1/2023 , Time: 12:42:37 PM
+        
+ Method: POST 
+ Route: /api/espresso-club/products 
+ User IP: ::1
