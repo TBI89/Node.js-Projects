@@ -23,13 +23,13 @@ class UserModel {
     }
 
     // Validation schema (build once):
-    public static validationSchema = Joi.object({
+    private static validationSchema = Joi.object({
         id: Joi.number().optional().integer().positive(),
         firstName: Joi.string().required().min(2).max(15),
         lastName: Joi.string().required().min(2).max(25),
         username: Joi.string().required().min(4).max(30),
         password: Joi.string().required().min(6).max(40),
-        roleId: Joi.number().optional().integer().min(1).max(2)
+        roleId: Joi.number().optional().min(1).max(2).integer()
     });
 
     // Validate props:

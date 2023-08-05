@@ -4,6 +4,7 @@ class AppConfig {
     public readonly mysqlUser = "root";
     public readonly mysqlPassword = "";
     public readonly mysqlDatabase = "northwind";
+    public readonly domainName = "http://localhost:" + this.port;
 }
 
 const appConfig = new AppConfig();

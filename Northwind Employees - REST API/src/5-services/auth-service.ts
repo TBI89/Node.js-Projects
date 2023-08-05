@@ -11,6 +11,9 @@ async function register(user: UserModel): Promise<string> { // returns a JWT tok
     // Validate props:
     user.validate();
 
+    // Check username availability:
+    if(await isUsernameTaken(user.username)) throw new ValidationError(`Username ${user.username} is already taken.`);
+
     // SQL query:
     const sql = `INSERT INTO users(firstName, lastName, username, password, roleId) 
     VALUES('${user.firstName}','${user.lastName}','${user.username}','${user.password}',${user.roleId} )`;
@@ -34,7 +37,7 @@ async function login(credentials: CredentialModel): Promise<string> {
 
     // SQL:
     const sql = `SELECT * FROM users WHERE 
-    '${credentials.username}' AND '${credentials.password}'`;
+    username = '${credentials.username}' AND password = '${credentials.password}'`;
 
     // Execute:
     const users = await dal.execute(sql);
@@ -51,15 +54,14 @@ async function login(credentials: CredentialModel): Promise<string> {
 }
 
 // Check if the username is already taken:
-async function isUsernameTaken(username: UserModel): Promise<boolean> {
+async function isUsernameTaken(username: string): Promise<boolean> {
     const sql = `SELECT COUNT(*) AS count FROM users WHERE username = '${username}'`; // = Exist.
     const result = await dal.execute(sql);
-    const count = result.count[0];
+    const count = result[0].count;
     return count > 0;
 }
 
 export default {
     register,
-    login,
-    isUsernameTaken
+    login
 };
