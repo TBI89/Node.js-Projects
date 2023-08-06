@@ -1,13 +1,22 @@
+import { OkPacket } from "mysql";
 import dal from "../2-utils/dal";
 import EmployeeModel from "../3-models/employee-model";
-import { OkPacket } from "mysql";
 import { ResourceNotFoundError } from "../3-models/error-model";
+import appConfig from "../2-utils/app-config";
 
 
 // Get all employees:
 async function getAllEmployees(): Promise<EmployeeModel[]> {
 
-    const sql = `SELECT * FROM employees`;
+    const sql = `SELECT
+     EmployeeID AS id,
+    FirstName AS firstName,
+    LastName AS lastName,
+    BirthDate AS birthDate,
+    Country AS country,
+    City AS city,
+    CONCAT('${appConfig.domainName}/api/employees/', photoPath) as imageUrl
+    FROM employees`;
     const employees = await dal.execute(sql);
     return employees;
 }

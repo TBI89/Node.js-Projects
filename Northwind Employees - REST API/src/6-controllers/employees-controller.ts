@@ -4,6 +4,7 @@ import StatusCode from "../3-models/status-code";
 import EmployeeModel from "../3-models/employee-model";
 import verifyToken from "../4-middleware/verify-token";
 import verifyAdmin from "../4-middleware/verify-admin";
+import path from "path";
 
 // Create router:
 const router = express.Router();
@@ -19,7 +20,7 @@ router.get("/employees", async (request: Request, response: Response, next: Next
     }
 });
 
-// Get one employees:
+// Get one employee:
 router.get("/employees/:id([0-9]+)", async (request: Request, response: Response, next: NextFunction) => {
     try {
         const id = +request.params.id;
@@ -34,6 +35,8 @@ router.get("/employees/:id([0-9]+)", async (request: Request, response: Response
 // Add new employee:
 router.post("/employees", verifyToken, async (request: Request, response: Response, next: NextFunction) => {
     try {
+        console.log(request.files);
+        
         const employee = new EmployeeModel(request.body);
         const addedEmployee = await employeesService.addEmployee(employee);
         response.status(StatusCode.Create).json(addedEmployee);
@@ -68,4 +71,16 @@ router.delete("/employees/:id([0-9]+)", verifyAdmin, async (request: Request, re
     }
 });
 
-export default router;
+// Get one image:
+router.get("/employees/:photoPath", async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const photoPath = request.params.photoPath;
+        const absolutePath = path.join(__dirname, "..", "1-assets", "images", photoPath);
+        response.sendFile(absolutePath);
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
+
+export default router;  
