@@ -35,8 +35,7 @@ router.get("/employees/:id([0-9]+)", async (request: Request, response: Response
 // Add new employee:
 router.post("/employees", verifyToken, async (request: Request, response: Response, next: NextFunction) => {
     try {
-        console.log(request.files);
-        
+        request.body.image = request.files?.image; // Add image from request.files to request.body.
         const employee = new EmployeeModel(request.body);
         const addedEmployee = await employeesService.addEmployee(employee);
         response.status(StatusCode.Create).json(addedEmployee);

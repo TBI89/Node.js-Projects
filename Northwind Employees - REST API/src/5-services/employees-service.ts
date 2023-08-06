@@ -3,6 +3,7 @@ import dal from "../2-utils/dal";
 import EmployeeModel from "../3-models/employee-model";
 import { ResourceNotFoundError } from "../3-models/error-model";
 import appConfig from "../2-utils/app-config";
+import imageHandler from "../2-utils/image-handler";
 
 
 // Get all employees:
@@ -45,10 +46,14 @@ async function addEmployee(employee: EmployeeModel): Promise<EmployeeModel> {
 
     employee.validate(); // Validate props.
 
-    const sql = `INSERT INTO employees(FirstName, LastName, BirthDate, Country, City)
-    VALUES('${employee.firstName}', '${employee.lastName}', '${employee.birthDate}', '${employee.country}', '${employee.city}')`;
+    const imageName = await imageHandler.saveImage(employee.image);
+
+    const sql = `INSERT INTO employees(FirstName, LastName, BirthDate, Country, City, PhotoPath)
+    VALUES('${employee.firstName}', '${employee.lastName}', '${employee.birthDate}', '${employee.country}', '${employee.city}', '${imageName}')`;
     const info: OkPacket = await dal.execute(sql);
     employee.id = info.insertId;
+    employee.imageUrl = `${appConfig.domainName}/api/employees/${imageName}`;
+    console.log(imageName);
     return employee;
 }
 

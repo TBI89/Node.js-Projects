@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { ValidationError } from "./error-model";
+import { UploadedFile } from "express-fileupload";
 
 class EmployeeModel {
 
@@ -11,6 +12,7 @@ class EmployeeModel {
     public country: string;
     public city: string;
     public imageUrl: string;
+    public image: UploadedFile;
 
     // Copy constructor:
     public constructor(employee: EmployeeModel) {
@@ -21,6 +23,7 @@ class EmployeeModel {
         this.country = employee.country;
         this.city = employee.city;
         this.imageUrl = employee.imageUrl;
+        this.image = employee.image;
     }
 
     // Validate properties (throw if not valid):
@@ -31,7 +34,8 @@ class EmployeeModel {
         birthDate: Joi.date().required(),
         country: Joi.string().required().min(3).max(20),
         city: Joi.string().required().min(2).max(30),
-        imageUrl: Joi.string().optional().min(36).max(200)
+        imageUrl: Joi.string().optional().min(36).max(200),
+        image: Joi.object().optional()
     });
 
     // Validate properties:
